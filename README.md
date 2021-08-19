@@ -96,7 +96,52 @@ git add .
 ```
 Note the `.` at the end - that adds _all changes_ from your working directory (recursively!).  You can be more selective if you want, specifying a file or folder to `add`.  Executing `git add` multiple times will stage the changes from all of the files you give it.  You can also see that the color of that file has changed when you run `git status`.  To remove a file that you accidentally added (without reverting your changes) you can use `git reset <file>`.
 
+And to lock in your change with a `commit`:
+```
+git commit -m '<descriptive message about your changes>'
+```
 
+Lots of places have standards around commit messages (we always do `<ticket number>: <descriptive message>`).  Take advantage of the low-effort documentation!
+
+If you don't like your message, `git commit --amend` will let you change it, but you can play with that later.
+
+Even before you've pushed your changes to GitHub, commits are really useful locally.  They'll let you easily go back in time to meaningful checkpoints, so you can attack even the most aggressive refactorings without fear of permanently losing something.  A good rule of thumb is to commit every time you get back to a working build - that means you have frequent checkpoints, and that no matter which commit you go back to (or try to deploy) it will at least _kinda_ work.
+
+#### Contribute your change
+
+Now you need to get your code back to GitHub, where your team can review it, approve it, run automation, and, eventually, merge it back in to `master`.  And even if it's not quite ready for review, pushing your branch will let others see it and pull it, which means they can help out or take over your partially completed work.
+
+Pushing to GitHub is really easy, just:
+```
+git push origin <branch-name>
+```
+
+In this case `origin` just says "the place I originally cloned from".  But git is distributed, not centralized, so you can replace that with a different `remote` if you want!  If you want to permanently change your `origin`, use `git remote set-url origin <new-url>`.
+
+Now you'll be able to see your branch in the GitHub UI, and open a Pull Request.  Do that, get feedback, update your code (change, `add`, `commit`, `push`, and it will automatically update your PR), and when your automation passes and the change is approved, merge it in!
+
+At this point, `master` has your changes incorporated, so you can switch back to `master` locally (`git checkout master`) and pull the latest changes (`git pull`).  With current practices, a merge to `master` will usually kick off more automated testing, and often a deployment to a non-production environment.  But different companies/projects have different standards, so ask before merging!
+
+It's also possible to merge locally instead of through GitHub, and there are tons of different flavors (e.g. fast-forward, or merge commit?) and different things that can "fail" (e.g. the dreaded merge conflict).
+
+### More topics
+
+I don't have time to write a thorough tutorial on all of these right now, but things to look into:
+* Reverting changes
+* Rebasing
+* Resolving merge conflicts
+
+# Docker
+
+I don't have time to write a thorough tutorial for this either, so we'll do it live!  Write up instructions as you go through, and commit them here for future reference.
+
+The really really short story on Docker:
+
+Docker is virtualization, but instead of sharing a hypervisor and running a VM (with its own operating system and everything) Docker shares the linux kernel.  That means you can focus on just the application, and keeps images (and containers) super lightweight.  It has a big ecosystem of base images, so you don't need to deal with installing your framework yourself, and sophisticated layering that enables further sharing.
+
+For example, at work we pull the dotnet core 3.1 image from Microsoft, create a new "base" image that has dependencies like New Relic installed, and then layer each application on top of _that_ in their own images.  That means updating a common dependency only happens a single time, and _all of our services_ get it _automatically_.  That's a huge time-saver.
+
+The plan is to grab a super simple node app, make a Dockerfile, and run a container locally.  That's a bit contrived, but it means whoever wants to run your app can do it without installing node, much less the same version of node.
 
 # Contributors
 * Jake Rosenberg
