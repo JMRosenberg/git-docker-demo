@@ -145,3 +145,4 @@ The plan is to grab a super simple node app, make a Dockerfile, and run a contai
 
 # Contributors
 * Jake Rosenberg
+* Dave Rosenberg
